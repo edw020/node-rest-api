@@ -61,7 +61,7 @@ exports.createPost = async(req, res, next) => {
 
         user.posts.push(post);
 
-        await user.save();
+        const savedUser = await user.save();
 
         // Now that post was saved will push (via websocket) new post notification to all clients.
         // Gets socket connection and will emit (to all connected users) in channel 'posts', the object with post on second param
@@ -72,6 +72,8 @@ exports.createPost = async(req, res, next) => {
             post: post,
             creator: {_id: user._id, name: user.name}
         });
+        // Adding return for testing purposes
+        return savedUser;
     } catch(err){
         if(!err.statusCode)
             err.statusCode = 500;
